@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Material Calculation</title>
+</head>
+<body>
+    <h1>Material Calculation for Project</h1>
+    <form method="post">
+        <label for="project_number">Project Number:</label><br>
+        <input type="text" id="project_number" name="project_number"><br><br>
+
+        <label for="job_description">Job Description:</label><br>
+        <input type="text" id="job_description" name="job_description"><br><br>
+
+        <label for="tray_run_length">Length of Tray Run (in meters):</label><br>
+        <input type="number" id="tray_run_length" name="tray_run_length"><br><br>
+
+        <label for="tray_bracket_width">Width of Tray Bracket (in meters):</label><br>
+        <input type="number" id="tray_bracket_width" name="tray_bracket_width"><br><br>
+
+        <label for="uni_bracket_run_length">Length of Uni Bracket Run (in meters):</label><br>
+        <input type="number" id="uni_bracket_run_length" name="uni_bracket_run_length"><br><br>
+
+        <label for="one_by_one_required">Amount of One by One Required:</label><br>
+        <input type="number" id="one_by_one_required" name="one_by_one_required"><br><br>
+
+        <label for="two_by_two_required">Amount of Two by Two Required:</label><br>
+        <input type="number" id="two_by_two_required" name="two_by_two_required"><br><br>
+
+        <label for="uni_brackets_required">Require Uni Brackets:</label><br>
+        <select id="uni_brackets_required" name="uni_brackets_required">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select><br><br>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    <h2>Results</h2>
+    <div id="results">
+        <!-- Results will be displayed here -->
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const A = 3;
+            const B = 2;
+            const C = 4;
+            const D = 4;
+            const E = 0.5;
+            const F = 1;
+            const G = 1;
+            const H = 1;
+            const I = 2;
+            const J = 1.2;
+            const L = 3;
+
+            const formData = new FormData(e.target);
+            const totalTraysRequired = Math.ceil(formData.get('tray_run_length') / A);
+            const totalTrayBracketsRequired = totalTraysRequired * B;
+            const total12mmRooferBolts = totalTrayBracketsRequired * C;
+            const total6mmPennyWashers = totalTrayBracketsRequired * D;
+            const totalEarthStraps = totalTrayBracketsRequired * E;
+            const total6mmBrassBolts = totalTrayBracketsRequired * F;
+            const total6mmBrassNuts = totalTrayBracketsRequired * G;
+            const total6mmSpringWashers = totalTrayBracketsRequired * H;
+            const totalBrass6mmWashers = totalTrayBracketsRequired * I;
+
+            let totalUniBracketsRequired = 0;
+            let totalLengthsOfUniRequired = 0;
+
+            if (formData.get('uni_brackets_required') === 'yes') {
+                totalUniBracketsRequired = Math.ceil(formData.get('uni_bracket_run_length') / J);
+                totalLengthsOfUniRequired = Math.ceil(totalUniBracketsRequired * formData.get('tray_bracket_width') / L);
+            }
+
+            const oneByOneAmount = formData.get('one_by_one_required') * totalUniBracketsRequired;
+            const twoByTwoAmount = formData.get('two_by_two_required') * totalUniBracketsRequired;
+
+            const total10mmBolts = (oneByOneAmount * 2 + twoByTwoAmount * 4) * 1;
+            const total10mmWashers = (oneByOneAmount * 2 + twoByTwoAmount * 4) * 1;
+            const total10mmSpringWashers = (oneByOneAmount * 2 + twoByTwoAmount * 4) * 1;
+            const total10mmZebs = (oneByOneAmount * 2 + twoByTwoAmount * 4) * 1;
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <p><strong>Project Number:</strong> ${formData.get('project_number')}</p>
+                <p><strong>Job Description:</strong> ${formData.get('job_description')}</p>
+                <p><strong>Length of Tray Run:</strong> ${formData.get('tray_run_length')} meters</p>
+                <p><strong>Width of Tray Bracket:</strong> ${formData.get('tray_bracket_width')} meters</p>
+                <p><strong>Length of Uni Bracket Run:</strong> ${formData.get('uni_bracket_run_length')} meters</p>
+                <p><strong>Amount of One by One Required:</strong> ${formData.get('one_by_one_required')}</p>
+                <p><strong>Amount of Two by Two Required:</strong> ${formData.get('two_by_two_required')}</p>
+
+                <h3>Materials Required:</h3>
+                <p><strong>Total Trays Required:</strong> ${totalTraysRequired}</p>
+                <p><strong>Total Tray Brackets Required:</strong> ${totalTrayBracketsRequired}</p>
+                <p><strong>Total 12mm Roofer Bolts and Nuts:</strong> ${total12mmRooferBolts}</p>
+                <p><strong>Total 6mm Penny Washers:</strong> ${total6mmPennyWashers}</p>
+                <p><strong>Total Earth Straps:</strong> ${totalEarthStraps}</p>
+                <p><strong>Total 6mm Brass Bolts:</strong> ${total6mmBrassBolts}</p>
+                <p><strong>Total 6mm Brass Nuts:</strong> ${total6mmBrassNuts}</p>
+                <p><strong>Total 6mm Spring Washers:</strong> ${total6mmSpringWashers}</p>
+                <p><strong>Total Brass 6mm Washers:</strong> ${totalBrass6mmWashers}</p>
+                <p><strong>Total Uni Brackets Requiring Fabrication:</strong> ${totalUniBracketsRequired}</p>
+                <p><strong>Total Lengths of Uni Required:</strong> ${totalLengthsOfUniRequired}</p>
+                <p><strong>Total One by One Required:</strong> ${oneByOneAmount}</p>
+                <p><strong>Total Two by Two Required:</strong> ${twoByTwoAmount}</p>
+                <p><strong>Total 10mm Bolts:</strong> ${total10mmBolts}</p>
+                <p><strong>Total 10mm Washers:</strong> ${total10mmWashers}</p>
+                <p><strong>Total 10mm Spring Washers:</strong> ${total10mmSpringWashers}</p>
+                <p><strong>Total 10mm Zebs:</strong> ${total10mmZebs}</p>
+            `;
+        });
+    </script>
+</body>
+</html>
+
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Uni Length Calculator</h1>
+        <form id="uniForm">
+            <label for="brackets">Number of brackets required:</label>
+            <input type="number" id="brackets" name="brackets" min="1" required><br><br>
+            
+            <label for="cut_length">Cut length (in meters):</label>
+            <input type="number" id="cut_length" name="cut_length" step="0.01" min="0.01" required><br><br>
+            
+            <input type="submit" value="Calculate">
+        </form>
+
+        <div id="result" style="display: none;">
+            <h2>Results</h2>
+            <p><strong>Number of brackets required:</strong> <span id="result_brackets"></span></p>
+            <p><strong>Requested cut length:</strong> <span id="result_cut_length"></span> meters</p>
+            <p><strong>Lengths of Uni required:</strong> <span id="result_lengths"></span> length(s)</p>
+            <p><strong>Excess length:</strong> <span id="result_excess"></span> meters ()</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("uniForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            var brackets = parseFloat(document.getElementById("brackets").value);
+            var cut_length = parseFloat(document.getElementById("cut_length").value);
+            
+            var lengths_of_uni, excess_length;
+            if (cut_length > 1.5) {
+                lengths_of_uni = brackets;
+            } else {
+                lengths_of_uni = Math.ceil(brackets * cut_length / 3);
+            }
+            
+            excess_length = (lengths_of_uni * 3) - (brackets * cut_length);
+            
+            document.getElementById("result_brackets").textContent = brackets;
+            document.getElementById("result_cut_length").textContent = cut_length.toFixed(2);
+            document.getElementById("result_lengths").textContent = lengths_of_uni;
+            document.getElementById("result_excess").textContent = excess_length.toFixed(2);
+            
+            document.getElementById("result").style.display = "block";
+        });
+    </script>
+</body>
+</html>
